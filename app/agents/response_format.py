@@ -1,7 +1,7 @@
 from langchain.prompts import PromptTemplate
 from langchain.schema import HumanMessage
 from app.agents.models import llm_gemini_flash
-from app.agents.validator import verificar_filtros
+from validator import verificar_filtros
 import requests
 
 template = """
@@ -17,7 +17,10 @@ Aqui está a resposta:
 """
 
 def executar_rota(rota):
-    ...
+    path_para_execucao = rota[0]['path']
+
+    resultado_api = requests.get(f"http:/127.0.0.1:5000{path_para_execucao}")
+    return resultado_api
 
 
 def gerar_resposta(pergunta):
@@ -26,17 +29,15 @@ def gerar_resposta(pergunta):
         input_variables=["pergunta", "resultado"]
     )
 
-    validacao, rota =  verificar_filtros(pergunta)
+    validacao, rota = verificar_filtros(pergunta)
 
     if validacao['validated'] == False:
         ...
 
-    resultado = executar_rota(rota=rota)
-    path_para_execucao = rota[0]['path']
-
-    resultado_api = requests.get(f"http:/127.0.0.1:5000{path_para_execucao}")
-    
+    resultado_api = executar_rota(rota=rota)
+  
     prompt_format = prompt.format(pergunta=pergunta, resultado=resultado_api)
     resposta = llm_gemini_flash.invoke([HumanMessage(content=prompt_format)])
 
     return resposta.content
+

@@ -60,6 +60,6 @@ def verificar_filtros(pergunta):
     resposta = llm_gemini_flash.invoke([HumanMessage(content=prompt_format)])
     return resposta.content
 
-resposta = verificar_filtros(pergunta="Quantos livros tenho salvos?")
-print(resposta)
+# resposta = verificar_filtros(pergunta="Quantos livros tenho salvos?")
+# print(resposta)
 
